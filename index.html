@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Word Guess Game</title>
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<!-- This displays the game to the user and gets dynamically updated by the javascript-->
+  <div id="game">
+    <h2>The Psychic Game</h2>
+    <h3>Guess what letter I'm thinking of</h3>
+    <p>Wins: <span id="wins"> 0</span></p>
+    <p>Losses: <span id="losses"> 0</span></p>
+    <p> Guesses Left: <span id="guessesLeft"> 10 </span></p>
+    <p> Your guesses so far:<span id="guessesSofar"> ...nothing</span></p>
+
+
+    <br>
+    <!-- <h2>You selected <span id="user-guess">...Nothing</span></h2>
+    <h2>The computer selected <span id="computer-guess">...Nothing</span></h2>
+    <h1 id="game-result"></h1> -->
+  </div>
+
+<!-- <script type="text/javascript" src="assets/javascript/game.js"> -->
+
+<script type="text/javascript">
+
+
+    // Initialize the things we need to track
+    var wins = 0;
+    var losses = 0;
+    var guessesLeft = 10;
+    var guessesSofar =[];
+    //The computer randomly chooses a letter from the alphabet
+    var letters = "abcdefghijklmnopqrstuvwxyz";
+    var computerChoice = letters[Math.floor(Math.random() * 26)];
+   
+   //execute when an even is keyed
+    document.onkeyup = function(event) {
+
+        // Determines which key was pressed. 
+        var userGuess = event.key;
+
+        //Alerts the user to a change in wins, losses, guesses left and the letters guessed so far
+        var winsElement = document.getElementById("wins");
+        var lossesElement = document.getElementById("losses");
+        var guessesLeftElement = document.getElementById("guessesLeft");
+        var guessesSofarElement = document.getElementById("guessesSofar");
+            winsElement.textContent = wins;
+            lossesElement.textContent = losses;
+            guessesLeftElement.textContent = guessesLeft;
+            guessesSofarElement.textContent = guessesSofar;
+
+
+        // Alerts the key the user pressed (userGuess).
+        var userGuessElement = document.getElementById("user-guess");
+        userGuessElement.textContent = userGuess;
+
+        // Alerts the Computer's guess.
+        var computerGuessElement = document.getElementById("computer-guess");
+        computerGuessElement.textContent = computerChoice;
+
+        //This will set up the variable that will update the page with the results of the ongoing games
+        var gameResultElement = document.getElementById("game-result");
+
+        
+            // Check if the user inputted something valid
+            if(letters.includes(userGuess) == true){
+        
+                //if we choose a letter we've already guessed
+                if (guessesSofar.includes(userGuess) == true) {
+                    gameResultElement.textContent = " have chosen a letter you have already guessed!";
+                }
+
+                //if we choose a new letter that is right
+                else if (userGuess === computerChoice) {
+                    //update the user
+                    gameResultElement.textContent = " have chosen the right letter!";
+                    //set a new computer guess
+                    computerChoice = letters[Math.floor(Math.random() * 26)];
+                    //guesses left gets reset
+                    guessesLeft = 10;
+                    // reset the list of letters guessed
+                    guessesSofar = [];
+                    //and one to the wins
+                    wins = wins +1;
+                    
+                }
+
+                //if we choose a new letter that is wrong
+                else {
+                    //If we chose the wrong letter and there are no more guesses left...
+                    if (guessesLeft-1 == 0){ 
+                        //update the user
+                        gameResultElement.textContent = " chose the wrong letter. No more guesses. Try again on a new game."; 
+                        //add one to the losses 
+                        losses = losses+1;                        
+                        //reset the number of guesses
+                        guessesLeft = 10;
+                        //reset the list of letters guessed
+                        guessesSofar = [];
+                        //set a new computer guess
+                        computerChoice = letters[Math.floor(Math.random() * 26)];
+                    }
+                    //If we chose the wrong letter and we still have some guesses left...
+                    else{
+                    //update the user
+                    gameResultElement.textContent = " chose the wrong letter.  Try Again";
+                    //guesses left goes down by 1
+                    guessesLeft = guessesLeft - 1;
+                    // add the letter to the list of letters already guessed
+                    guessesSofar.push(userGuess);
+                    // then sort the letters in alphabetical order because that looks nice.
+                    guessesSofar = guessesSofar.sort();
+                    }
+                }
+
+            } 
+            else {
+                console.log("Please center a lowercase letter");
+            }
+
+
+    }
+</script>
+
+</body>
